@@ -24,7 +24,7 @@
     <style>
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: #110c46; /* User requested Deep Blue */
+            background-color: #110c46; /* Deep Blue Theme */
             color: #ffffff;
         }
         
@@ -81,16 +81,6 @@
         const RefreshCw = (props) => <IconBase {...props}><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /><path d="M21 3v5h-5" /><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /><path d="M8 16H3v5" /></IconBase>;
         const Download = (props) => <IconBase {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></IconBase>;
         const Camera = (props) => <IconBase {...props}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></IconBase>;
-        const Users = (props) => <IconBase {...props}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></IconBase>;
-        const LinkIcon = (props) => <IconBase {...props}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></IconBase>;
-        const FacebookIcon = (props) => <IconBase {...props}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></IconBase>;
-        
-        // Custom Line Icon Path
-        const LineIcon = (props) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {...props}>
-                <path d="M21.17 9.5c0-4.66-4.11-8.5-9.17-8.5S2.83 4.84 2.83 9.5c0 4.17 3.32 7.69 7.73 8.35.3.07.71.21.82 1.13l.2 1.25c.06.39-.28 1.53 1.34.82 5.07-2.77 8.25-5.32 8.25-11.55z"/>
-            </svg>
-        );
 
         const initialEvent = { id: 1, month: 1, content: '' };
 
@@ -100,18 +90,8 @@
             const [photo, setPhoto] = useState(null);
             const [showResult, setShowResult] = useState(false);
             const [isGenerating, setIsGenerating] = useState(false);
-            const [participantCount, setParticipantCount] = useState(0);
             const cardRef = useRef(null);
             const fileInputRef = useRef(null);
-
-            // Mock Counter Logic (From previous state)
-            useEffect(() => {
-                const startDate = new Date('2024-12-01').getTime();
-                const now = new Date().getTime();
-                const hoursPassed = (now - startDate) / (1000 * 60 * 60);
-                const count = Math.floor(2500 + (hoursPassed * 5.2)); 
-                setParticipantCount(count.toLocaleString());
-            }, []);
 
             const addEvent = () => {
                 const newId = events.length > 0 ? Math.max(...events.map(e => e.id)) + 1 : 1;
@@ -157,27 +137,6 @@
                 window.scrollTo(0,0);
             };
 
-            // Specific Share Functions
-            const shareToLine = () => {
-                const url = encodeURIComponent(window.location.href);
-                window.open(`https://social-plugins.line.me/lineit/share?url=${url}`, '_blank');
-            };
-
-            const shareToFacebook = () => {
-                const url = encodeURIComponent(window.location.href);
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-            };
-
-            const copyLink = async () => {
-                try {
-                    await navigator.clipboard.writeText(window.location.href);
-                    alert('連結已複製到剪貼簿！');
-                } catch (err) {
-                    console.error('Copy failed', err);
-                    alert('複製失敗，請手動複製網址');
-                }
-            };
-
             const downloadImage = async () => {
                 if (!cardRef.current) return;
                 setIsGenerating(true);
@@ -217,8 +176,6 @@
                             <span className="text-xs bg-yellow-500 text-[#110c46] font-bold px-2 py-1 rounded-full">互動模板</span>
                         </div>
                     </header>
-
-                    {/* Counter Banner (Hidden as requested before, keeping code clean) */}
 
                     <main className="max-w-md mx-auto p-4">
                         {!showResult ? (
@@ -423,7 +380,7 @@
                                     <div className="bg-gradient-to-r from-[#110c46] to-[#2a2375] h-4 w-full absolute bottom-0"></div>
                                 </div>
 
-                                {/* Action Buttons */}
+                                {/* Action Buttons - Share removed */}
                                 <div className="space-y-4 pb-8">
                                     <button 
                                         onClick={downloadImage}
@@ -437,31 +394,6 @@
                                             </>
                                         )}
                                     </button>
-
-                                    {/* Specific Share Buttons */}
-                                    <div className="grid grid-cols-3 gap-2">
-                                        <button 
-                                            onClick={shareToLine}
-                                            className="py-3 bg-[#06C755] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all"
-                                        >
-                                            <LineIcon size={20} />
-                                            Line
-                                        </button>
-                                        <button 
-                                            onClick={shareToFacebook}
-                                            className="py-3 bg-[#1877F2] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all"
-                                        >
-                                            <FacebookIcon size={20} />
-                                            FB
-                                        </button>
-                                        <button 
-                                            onClick={copyLink}
-                                            className="py-3 bg-gray-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-500 active:scale-95 transition-all"
-                                        >
-                                            <LinkIcon size={20} />
-                                            複製連結
-                                        </button>
-                                    </div>
 
                                     <p className="text-center text-xs text-gray-400 mt-2">
                                         專屬於您的回憶，請長按儲存或分享
@@ -479,3 +411,5 @@
     </script>
 </body>
 </html>
+  
+          
