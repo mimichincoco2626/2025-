@@ -24,7 +24,7 @@
     <style>
         body {
             font-family: 'Noto Sans TC', sans-serif;
-            background-color: #110c46; /* Deep Blue Theme */
+            background-color: #0F0B36; /* Darker Blue Body */
             color: #ffffff;
         }
         
@@ -32,12 +32,14 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Card Pattern */
-        .card-pattern {
-            background-color: #ffffff;
-            background-image: radial-gradient(#110c46 0.5px, transparent 0.5px);
-            background-size: 20px 20px;
-            opacity: 1;
+        /* Starry Background Pattern for Card */
+        .starry-bg {
+            background-color: #110c46;
+            background-image: 
+                radial-gradient(white 1px, transparent 1px),
+                radial-gradient(rgba(255, 255, 255, 0.5) 1px, transparent 1px);
+            background-size: 50px 50px, 20px 20px;
+            background-position: 0 0, 10px 10px;
         }
 
         /* Animations */
@@ -54,7 +56,7 @@
             border-radius: 50%;
             overflow: hidden;
             position: relative;
-            background-color: #f3f4f6;
+            background-color: #1e1b4b;
             border: 4px solid #FCD34D; /* Amber-300 */
             transition: all 0.3s;
         }
@@ -143,9 +145,9 @@
                 try {
                     await new Promise(resolve => setTimeout(resolve, 500));
                     const canvas = await html2canvas(cardRef.current, {
-                        scale: 4, // Increased scale for higher quality (sharp photo)
+                        scale: 4, // High Resolution
                         useCORS: true,
-                        backgroundColor: '#ffffff', // Card background
+                        backgroundColor: '#110c46', // Make sure background is dark blue, not white
                     });
                     const image = canvas.toDataURL("image/png");
                     const link = document.createElement("a");
@@ -165,7 +167,7 @@
                 .sort((a, b) => parseInt(a.month) - parseInt(b.month));
 
             return (
-                <div className="min-h-screen pb-10 bg-[#110c46]">
+                <div className="min-h-screen pb-10 bg-[#0F0B36]">
                     {/* Header */}
                     <header className="bg-[#0b0830] text-white p-4 shadow-lg sticky top-0 z-50 border-b border-white/10">
                         <div className="max-w-md mx-auto flex items-center justify-between">
@@ -195,13 +197,13 @@
                                         {photo ? (
                                             <img src={photo} alt="Upload" className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="flex flex-col items-center text-gray-400 group-hover:text-[#110c46] transition-colors">
+                                            <div className="flex flex-col items-center text-gray-400 group-hover:text-yellow-400 transition-colors">
                                                 <Camera size={32} />
                                                 <span className="text-xs font-bold mt-1">上傳照片</span>
                                             </div>
                                         )}
                                         {/* Overlay hint */}
-                                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                             <span className="text-white text-xs font-bold">更換</span>
                                         </div>
                                     </div>
@@ -301,38 +303,38 @@
                                 {/* THE CARD TO BE CAPTURED */}
                                 <div 
                                     ref={cardRef} 
-                                    className="bg-white rounded-none md:rounded-3xl shadow-2xl overflow-hidden relative"
+                                    className="rounded-none md:rounded-3xl shadow-2xl overflow-hidden relative starry-bg"
                                     style={{ minHeight: '550px' }}
                                 >
-                                    {/* Brand Header */}
-                                    <div className="bg-[#110c46] h-16 w-full flex items-center px-6 justify-between relative overflow-hidden">
+                                    {/* Brand Header (Transparent or blended) */}
+                                    <div className="h-20 w-full flex items-center px-8 justify-between relative overflow-hidden bg-gradient-to-b from-black/20 to-transparent">
                                         <div className="flex items-center gap-2 text-yellow-400 z-10">
                                             <Star className="fill-yellow-400" size={18}/>
                                             <span className="font-bold tracking-wider">親子天下 2025</span>
                                         </div>
-                                        {/* Decorative Circles */}
-                                        <div className="absolute -right-4 -top-4 w-20 h-20 bg-yellow-500 rounded-full opacity-20"></div>
-                                        <div className="absolute right-10 top-2 w-4 h-4 bg-orange-400 rounded-full opacity-50"></div>
+                                        {/* Decorative Circles (Abstract Planets) */}
+                                        <div className="absolute -right-4 -top-4 w-20 h-20 bg-yellow-500 rounded-full opacity-20 blur-xl"></div>
+                                        <div className="absolute right-10 top-2 w-4 h-4 bg-orange-400 rounded-full opacity-60 shadow-[0_0_10px_rgba(251,146,60,0.6)]"></div>
                                     </div>
                                     
                                     {/* Main Content */}
-                                    <div className="p-8 card-pattern h-full relative">
+                                    <div className="p-8 h-full relative z-10">
                                         
                                         <div className="flex justify-between items-start mb-6">
                                             <div>
-                                                <div className="inline-block bg-orange-100 text-[#110c46] px-3 py-1 rounded-full text-sm font-bold mb-3 border border-orange-200">
+                                                <div className="inline-block bg-white/10 text-yellow-300 px-3 py-1 rounded-full text-sm font-bold mb-3 border border-yellow-400/30 backdrop-blur-sm">
                                                     2025 成 長 紀 錄
                                                 </div>
-                                                <h2 className="text-3xl font-black text-[#110c46] leading-tight">
-                                                    <span className="text-orange-600 border-b-4 border-orange-200">{childName}</span> 的<br/>
+                                                <h2 className="text-3xl font-black text-white leading-tight">
+                                                    <span className="text-yellow-400 border-b-4 border-yellow-400/30">{childName}</span> 的<br/>
                                                     年度大事記
                                                 </h2>
                                             </div>
                                             
-                                            {/* Photo on Card (Fixed distortion issue using background-image) */}
+                                            {/* Photo on Card */}
                                             {photo && (
                                                 <div 
-                                                    className="w-24 h-24 rounded-full border-4 border-yellow-400 shadow-md flex-shrink-0 bg-gray-100"
+                                                    className="w-24 h-24 rounded-full border-4 border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.3)] flex-shrink-0 bg-gray-800"
                                                     style={{
                                                         backgroundImage: `url(${photo})`,
                                                         backgroundSize: 'cover',
@@ -344,43 +346,45 @@
                                         </div>
 
                                         {/* Timeline */}
-                                        <div className="space-y-0 relative mt-4">
+                                        <div className="space-y-0 relative mt-6">
                                             {/* Line */}
-                                            <div className="absolute left-6 top-4 bottom-4 w-0.5 bg-orange-200"></div>
+                                            <div className="absolute left-6 top-4 bottom-4 w-0.5 bg-yellow-400/30"></div>
 
                                             {sortedEvents.map((event, idx) => (
                                                 <div key={idx} className="relative flex items-start gap-4 mb-5 last:mb-0">
                                                     {/* Bubble */}
-                                                    <div className="relative z-10 flex-shrink-0 w-12 h-12 bg-[#110c46] text-white border-2 border-yellow-400 rounded-full flex items-center justify-center shadow-md">
-                                                        <span className="font-bold text-sm">{event.month}月</span>
+                                                    <div className="relative z-10 flex-shrink-0 w-12 h-12 bg-yellow-400 text-[#110c46] border-2 border-white/50 rounded-full flex items-center justify-center shadow-lg font-black">
+                                                        <span className="text-sm">{event.month}月</span>
                                                     </div>
                                                     
                                                     {/* Text */}
-                                                    <div className="pt-2 pb-2 w-full">
-                                                        <p className="text-[#110c46] font-bold text-lg leading-relaxed border-b border-dashed border-gray-300 pb-2">
-                                                            {event.content}
-                                                        </p>
+                                                    <div className="pt-0 w-full">
+                                                        <div className="bg-white/10 backdrop-blur-md border border-white/10 rounded-xl p-3 shadow-sm">
+                                                            <p className="text-white font-bold text-lg leading-relaxed">
+                                                                {event.content}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             ))}
                                         </div>
 
                                         {/* Footer */}
-                                        <div className="mt-10 pt-4 flex justify-between items-end">
+                                        <div className="mt-12 pt-4 flex justify-between items-end border-t border-white/10">
                                             <div>
-                                                <p className="text-gray-500 font-medium text-xs">#2025親子天下年度專題</p>
+                                                <p className="text-gray-400 font-medium text-xs">#2025親子天下年度專題</p>
                                             </div>
-                                            <div className="flex gap-1 opacity-50">
-                                                <Star className="w-4 h-4 text-[#110c46]" />
+                                            <div className="flex gap-1 opacity-70">
+                                                <Star className="w-4 h-4 text-yellow-400" />
                                             </div>
                                         </div>
                                     </div>
                                     
                                     {/* Bottom Bar */}
-                                    <div className="bg-gradient-to-r from-[#110c46] to-[#2a2375] h-4 w-full absolute bottom-0"></div>
+                                    <div className="bg-gradient-to-r from-yellow-600 via-yellow-400 to-yellow-600 h-2 w-full absolute bottom-0"></div>
                                 </div>
 
-                                {/* Action Buttons - Share removed */}
+                                {/* Action Buttons */}
                                 <div className="space-y-4 pb-8">
                                     <button 
                                         onClick={downloadImage}
@@ -411,4 +415,3 @@
     </script>
 </body>
 </html>
-          
