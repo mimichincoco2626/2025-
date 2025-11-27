@@ -143,7 +143,7 @@
                 try {
                     await new Promise(resolve => setTimeout(resolve, 500));
                     const canvas = await html2canvas(cardRef.current, {
-                        scale: 2,
+                        scale: 4, // Increased scale for higher quality (sharp photo)
                         useCORS: true,
                         backgroundColor: '#ffffff', // Card background
                     });
@@ -411,5 +411,4 @@
     </script>
 </body>
 </html>
-  
           
