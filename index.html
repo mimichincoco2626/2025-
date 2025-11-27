@@ -82,7 +82,15 @@
         const Download = (props) => <IconBase {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></IconBase>;
         const Camera = (props) => <IconBase {...props}><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></IconBase>;
         const Users = (props) => <IconBase {...props}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></IconBase>;
-        const Share2 = (props) => <IconBase {...props}><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></IconBase>;
+        const LinkIcon = (props) => <IconBase {...props}><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></IconBase>;
+        const FacebookIcon = (props) => <IconBase {...props}><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></IconBase>;
+        
+        // Custom Line Icon Path
+        const LineIcon = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" {...props}>
+                <path d="M21.17 9.5c0-4.66-4.11-8.5-9.17-8.5S2.83 4.84 2.83 9.5c0 4.17 3.32 7.69 7.73 8.35.3.07.71.21.82 1.13l.2 1.25c.06.39-.28 1.53 1.34.82 5.07-2.77 8.25-5.32 8.25-11.55z"/>
+            </svg>
+        );
 
         const initialEvent = { id: 1, month: 1, content: '' };
 
@@ -149,25 +157,24 @@
                 window.scrollTo(0,0);
             };
 
-            // Share Functionality
-            const handleShare = async () => {
-                const shareData = {
-                    title: '2025 親子天下 - 孩子個人大事記',
-                    text: '我剛剛製作了孩子的2025年度大事記，快來看看並製作屬於你的！',
-                    url: window.location.href, // This shares the current page URL
-                };
+            // Specific Share Functions
+            const shareToLine = () => {
+                const url = encodeURIComponent(window.location.href);
+                window.open(`https://social-plugins.line.me/lineit/share?url=${url}`, '_blank');
+            };
 
+            const shareToFacebook = () => {
+                const url = encodeURIComponent(window.location.href);
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+            };
+
+            const copyLink = async () => {
                 try {
-                    if (navigator.share) {
-                        // Mobile / Supported Browsers
-                        await navigator.share(shareData);
-                    } else {
-                        // Desktop Fallback
-                        await navigator.clipboard.writeText(window.location.href);
-                        alert('連結已複製到剪貼簿！快去貼給朋友吧！');
-                    }
+                    await navigator.clipboard.writeText(window.location.href);
+                    alert('連結已複製到剪貼簿！');
                 } catch (err) {
-                    console.error('Error sharing:', err);
+                    console.error('Copy failed', err);
+                    alert('複製失敗，請手動複製網址');
                 }
             };
 
@@ -211,13 +218,7 @@
                         </div>
                     </header>
 
-                    {/* Counter Banner (Kept based on file state, can remove if needed) */}
-                    <div className="max-w-md mx-auto mt-4 px-4">
-                        <div className="bg-white/10 backdrop-blur-md rounded-lg p-3 flex items-center justify-center gap-2 text-yellow-300 border border-yellow-500/30">
-                            <Users size={18} />
-                            <span className="text-sm font-medium">已有 <span className="font-bold text-white text-lg">{participantCount}</span> 位家長建立檔案</span>
-                        </div>
-                    </div>
+                    {/* Counter Banner (Hidden as requested before, keeping code clean) */}
 
                     <main className="max-w-md mx-auto p-4">
                         {!showResult ? (
@@ -371,11 +372,17 @@
                                                 </h2>
                                             </div>
                                             
-                                            {/* Photo on Card */}
+                                            {/* Photo on Card (Fixed distortion issue using background-image) */}
                                             {photo && (
-                                                <div className="w-24 h-24 rounded-full border-4 border-yellow-400 shadow-md overflow-hidden flex-shrink-0 bg-gray-100">
-                                                    <img src={photo} alt="Child" className="w-full h-full object-cover" />
-                                                </div>
+                                                <div 
+                                                    className="w-24 h-24 rounded-full border-4 border-yellow-400 shadow-md flex-shrink-0 bg-gray-100"
+                                                    style={{
+                                                        backgroundImage: `url(${photo})`,
+                                                        backgroundSize: 'cover',
+                                                        backgroundPosition: 'center',
+                                                        backgroundRepeat: 'no-repeat'
+                                                    }}
+                                                />
                                             )}
                                         </div>
 
@@ -417,7 +424,7 @@
                                 </div>
 
                                 {/* Action Buttons */}
-                                <div className="space-y-3 pb-8">
+                                <div className="space-y-4 pb-8">
                                     <button 
                                         onClick={downloadImage}
                                         disabled={isGenerating}
@@ -431,14 +438,30 @@
                                         )}
                                     </button>
 
-                                    {/* Share Button */}
-                                    <button 
-                                        onClick={handleShare}
-                                        className="w-full py-4 bg-transparent border-2 border-white/20 text-white rounded-full font-bold text-xl hover:bg-white/10 active:scale-95 transition-all flex items-center justify-center gap-2"
-                                    >
-                                        <Share2 size={24} />
-                                        分享這個互動
-                                    </button>
+                                    {/* Specific Share Buttons */}
+                                    <div className="grid grid-cols-3 gap-2">
+                                        <button 
+                                            onClick={shareToLine}
+                                            className="py-3 bg-[#06C755] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all"
+                                        >
+                                            <LineIcon size={20} />
+                                            Line
+                                        </button>
+                                        <button 
+                                            onClick={shareToFacebook}
+                                            className="py-3 bg-[#1877F2] text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all"
+                                        >
+                                            <FacebookIcon size={20} />
+                                            FB
+                                        </button>
+                                        <button 
+                                            onClick={copyLink}
+                                            className="py-3 bg-gray-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-gray-500 active:scale-95 transition-all"
+                                        >
+                                            <LinkIcon size={20} />
+                                            複製連結
+                                        </button>
+                                    </div>
 
                                     <p className="text-center text-xs text-gray-400 mt-2">
                                         專屬於您的回憶，請長按儲存或分享
